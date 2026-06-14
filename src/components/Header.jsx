@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-export default function Header({ onToggleSidebar, title = 'Dashboard' }) {
+export default function Header({ title = 'Dashboard' }) {
   const { currentUser, userData, logout } = useAuth();
   const [darkMode, setDarkMode] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -61,16 +61,6 @@ export default function Header({ onToggleSidebar, title = 'Dashboard' }) {
     <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 lg:px-6">
       {/* Left section */}
       <div className="flex items-center gap-3">
-        {/* Mobile menu toggle */}
-        <button
-          onClick={onToggleSidebar}
-          className="md:hidden p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
         {/* Page title */}
         <h1 className="text-lg font-semibold text-gray-800 dark:text-white">{title}</h1>
       </div>
