@@ -1,0 +1,93 @@
+# ─────────────────────────────────────────────
+#  Student Management System - Robots.txt
+#  Production SEO & Crawler Management
+# ─────────────────────────────────────────────
+
+# === BLOCKED BOTS (AI scrapers, data miners, bots known for abuse) ===
+
+# OpenAI GPTBot - blocks ChatGPT training on site content
+User-agent: GPTBot
+Disallow: /
+
+# OpenAI OAI-SearchBot
+User-agent: OAI-SearchBot
+Disallow: /
+
+# Anthropic ClaudeBot
+User-agent: ClaudeBot
+Disallow: /
+
+# Anthropic Claude-Web
+User-agent: Claude-Web
+Disallow: /
+
+# ByteDance Bytespider (aggressive scraper)
+User-agent: Bytespider
+Disallow: /
+
+# Amazonbot (Amazon scraping for AI)
+User-agent: Amazonbot
+Disallow: /
+
+# CommonCrawl CCBot
+User-agent: CCBot
+Disallow: /
+
+# Facebook crawler
+User-agent: facebookexternalhit
+Disallow: /
+
+# Google Extended (AI training)
+User-agent: Google-Extended
+Disallow: /
+
+# PerplexityBot (AI search)
+User-agent: PerplexityBot
+Disallow: /
+
+# === ALLOWED CRAWLERS ===
+
+# Google (limited to essential pages only)
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+Disallow: /students
+Disallow: /attendance
+Disallow: /leaves
+Disallow: /api/
+
+# Bing (limited)
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /students
+Disallow: /attendance
+Disallow: /leaves
+Disallow: /api/
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+Disallow: /dashboard
+Disallow: /api/
+
+# === GENERAL RULES ===
+
+# Block all private/dashboard routes from crawling
+Disallow: /dashboard
+Disallow: /students
+Disallow: /attendance
+Disallow: /leaves
+Disallow: /api/
+
+# Block all query parameters (prevents infinite crawl)
+Disallow: /*?*
+
+# Block all dynamic/login pages
+Disallow: /login
+
+# === CRAWL DELAY (reduces server load) ===
+Crawl-delay: 10
+
+# === SITEMAP ===
+Sitemap: https://student-dashboard.vercel.app/sitemap.xml

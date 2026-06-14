@@ -1,0 +1,95 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() 
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isTeacher() {
+      return isAuthenticated() 
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+
+    function isTeacherOrAdmin() {
+      return isAuthenticated() 
+        && (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'teacher']);
+    }
+
+    function isStudent() {
+      return isAuthenticated() 
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'student';
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own data, admins can read all
+      allow read: if isAuthenticated() 
+        && (request.auth.uid == userId || isTeacherOrAdmin());
+      
+      // Only admins can create/update/delete users
+      allow create: if isAdmin();
+      allow update: if isAdmin() || request.auth.uid == userId;
+      allow delete: if isAdmin();
+    }
+
+    // Students collection
+    match /students/{studentId} {
+      // Authenticated users can read students
+      allow read: if isAuthenticated();
+      
+      // Only teachers and admins can write
+      allow create: if isTeacherOrAdmin();
+      allow update: if isTeacherOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Attendance collection
+    match /attendance/{attendanceId} {
+      // Authenticated users can read attendance
+      allow read: if isAuthenticated();
+      
+      // Only teachers and admins can write
+      allow create: if isTeacherOrAdmin();
+      allow update: if isTeacherOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Leaves collection
+    match /leaves/{leaveId} {
+      // Authenticated users can read their own leaves, teachers/admins can read all
+      allow read: if isAuthenticated() 
+        && (isTeacherOrAdmin() || request.auth.uid == resource.data.studentId);
+      
+      // Any authenticated user can create a leave
+      allow create: if isAuthenticated();
+      
+      // Only teachers and admins can update/reject leaves
+      allow update: if isTeacherOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Announcements collection
+    match /announcements/{announcementId} {
+      // Any authenticated user can read announcements
+      allow read: if isAuthenticated();
+      
+      // Only teachers and admins can create/update/delete
+      allow create: if isTeacherOrAdmin();
+      allow update: if isTeacherOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
